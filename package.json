@@ -1,0 +1,29 @@
+{
+  "name": "discordbot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jbowenfavre4/discordbot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jbowenfavre4/discordbot/issues"
+  },
+  "homepage": "https://github.com/jbowenfavre4/discordbot#readme",
+  "dependencies": {
+    "axios": "^0.26.1",
+    "discord.js": "^13.6.0",
+    "dotenv": "^16.0.0",
+    "give-me-a-joke": "^0.5.1",
+    "jquery": "^3.6.0",
+    "lorem-ipsum": "^2.0.4",
+    "math": "^0.0.3",
+    "puppeteer": "^13.5.2"
+  }
+}
