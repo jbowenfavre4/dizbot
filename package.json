@@ -17,13 +17,20 @@
   },
   "homepage": "https://github.com/jbowenfavre4/discordbot#readme",
   "dependencies": {
+    "@discordjs/opus": "^0.7.0",
     "axios": "^0.26.1",
     "discord.js": "^13.6.0",
+    "discordaudio": "^2.5.9",
     "dotenv": "^16.0.0",
+    "ffmpeg-static": "^5.0.0",
     "give-me-a-joke": "^0.5.1",
     "jquery": "^3.6.0",
     "lorem-ipsum": "^2.0.4",
     "math": "^0.0.3",
-    "puppeteer": "^13.5.2"
+    "node-fetch": "^3.2.3",
+    "node-gyp": "^9.0.0",
+    "puppeteer": "^13.5.2",
+    "yt-search": "^2.10.3",
+    "ytdl-core": "^4.11.0"
   }
 }

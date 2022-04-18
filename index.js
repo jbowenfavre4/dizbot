@@ -1,6 +1,7 @@
 require('dotenv').config();
 const https = require('https')
-const { Client, Intents } = require('discord.js')
+const { AudioManager } = require('discordaudio')
+const { Client, Intents, VoiceState } = require('discord.js')
 const { LoremIpsum }  = require('lorem-ipsum')
 const lorem = new LoremIpsum({
     sentencesPerParagraph: {
@@ -13,15 +14,16 @@ const lorem = new LoremIpsum({
     }
 })
 const giveMeAJoke = require('give-me-a-joke')
-const puppeteer = require('puppeteer')
+const puppeteer = require('puppeteer');
 const client = new Client(
-    { intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] }
+    { intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_VOICE_STATES] }
 )
 client.on('ready', function(e) {
     console.log(`Logged in as ${client.user.tag}`)
 })
 client.login(process.env.BOT_TOKEN)
 client.on('message', async msg => {
+    let connections = new Map()
     if (msg.author.bot) return
     if (msg.content === 'hey dizbot') {
         msg.reply('hey')
@@ -62,6 +64,31 @@ client.on('message', async msg => {
         })
         request.end()
         
+    } else if (msg.content.startsWith('dizbot music')) {
+        const audioManager = new AudioManager()
+        try {
+            let msgSplit = msg.content.split(' ')
+            let input = msgSplit[2]
+            let vc = msg.member.voice.channel
+            if (!vc) return msg.reply('try again while in a voice channel bozo')
+            audioManager.play(vc, input, {
+                volume: 3,
+                quality: 'high',
+                audiotype: 'arbitrary'
+            }).then(queue => {
+                
+                connections.set(vc.id, vc)
+                if (queue === false) {
+                    msg.reply('playing now')
+                } else {
+                    msg.reply('added song to queue')
+                }
+            })
+
+        } catch(e) {
+            msg.reply('invalid command buddy. try again')
+        }
+
     }
 })
 
