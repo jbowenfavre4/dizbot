@@ -96,11 +96,15 @@ client.on('message', async msg => {
                     data = data + chunk.toString()
                 })
                 res.on('end', () => {
-                    const body = JSON.parse(data)
-                    for (let player of body.players) {
-                        messageText += `${player.leaderboardRank}. ${player.gameName} - ${player.numberOfWins} wins, ${player.rankedRating} rating\n`
+                    try {
+                        const body = JSON.parse(data)
+                        for (let player of body.players) {
+                            messageText += `${player.leaderboardRank}. ${player.gameName} - ${player.numberOfWins} wins, ${player.rankedRating} rating\n`
+                        }
+                        msg.reply(`Valorant Leaderboard\n\n${messageText}`)
+                    } catch(err) {
+                        msg.reply('something went wrong. @diz probably needs to update the valorant api key')
                     }
-                    msg.reply(`Valorant Leaderboard\n\n${messageText}`)
                 })
             })
             request.end()
@@ -152,55 +156,6 @@ client.on('message', async msg => {
         } catch(e) {
             msg.reply('invalid command buddy. try again')
         }
-
-    // } else if (msg.content.startsWith('dizbot text')) {
-    //     let msgSplit = msg.content.split(' ')
-       
-    //     let textMsg = ''
-    //     for (let word of msgSplit.slice(1)) {
-    //         textMsg = textMsg.concat(word) + ' '
-    //     }
-
-    //     const accountSID = process.env.TWILIO_ACC
-    //     const authToken = process.env.TWILIO_KEY
-    //     const client = require('twilio')(accountSID, authToken)
-
-    //     client.messages.create({
-    //         body: textMsg,
-    //         from: process.env.TWILIO_NUM,
-    //         to: '8015640891'
-    //     }).then(msg.reply('message sent')).catch(err => msg.reply('something went wrong'))
-            
-    // } else if (msg.content.startsWith('dizbot email')) {
-    //     msgSplit = msg.content.split(' ')
-    //     toEmail = msgSplit[1]
-    //     emailBody = ''
-    //     for (let word of msgSplit.slice(2)) {
-    //         emailBody = emailBody.concat(word) + ' '
-    //     }
-    //     const nodemailer = require('nodemailer')
-    //     const transporter = nodemailer.createTransport({
-    //         service: 'gmail',
-    //         auth: {
-    //             user: 'dizjoemamabot@gmail.com',
-    //             pass: process.env.EMAIL_PW
-    //         }
-    //     })
-    //     const mailOptions = {
-    //         from: 'dizjoemamabot@gmail.com',
-    //         to: toEmail,
-    //         subject: 'from dizbot',
-    //         text: emailBody
-    //     }
-
-    //     transporter.sendMail(mailOptions, function(error, info) {
-    //         if (error) {
-    //             console.log(error)
-    //             msg.reply('something went wrong')
-    //             return
-    //         }
-    //     })
-    //     msg.reply('email sent')
     
     } else if (msg.content === 'dizbot die'){
         msg.reply('goodbye cruel world')

@@ -1,4 +1,3 @@
 "dizbot hello": say hello
-"dizbot die": kills bot
 "dizbot music <link>": plays music from youtube
 "dizbot btc": tells current price of bitcoin
