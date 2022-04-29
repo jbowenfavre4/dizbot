@@ -1,3 +1,4 @@
 "dizbot hello": say hello
 "dizbot music <link>": plays music from youtube
 "dizbot btc": tells current price of bitcoin
+"dizbot valorant leaderboard": shows current top 10 on valorant ranked leaderboard
