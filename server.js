@@ -5,27 +5,19 @@ require('dotenv').config();
 const fs = require('fs')
 const https = require('https')
 const discord = require('discord.js')
-//const { LoremIpsum }  = require('lorem-ipsum')
-// const lorem = new LoremIpsum({
-//     sentencesPerParagraph: {
-//         max: 8,
-//         min: 4
-//     },
-//     wordsPerSentence: {
-//         max: 16,
-//         min: 4
-//     }
-// })
-//const giveMeAJoke = require('give-me-a-joke');
 const { fileURLToPath } = require('url');
 const { exit } = require('process');
+const { workersUrl } = require('twilio/lib/jwt/taskrouter/util');
 const client = new discord.Client(
     { intents: [discord.Intents.FLAGS.GUILDS, discord.Intents.FLAGS.GUILD_MESSAGES, discord.Intents.FLAGS.GUILD_VOICE_STATES] }
 )
+
 client.on('ready', function(e) {
     console.log(`Logged in as ${client.user.tag}`)
 })
+
 client.login(process.env.BOT_TOKEN)
+
 client.on('message', async msg => {
     
     let connections = new Map()
@@ -111,24 +103,35 @@ client.on('message', async msg => {
             msg.reply('sorry, invalid command')
         }   
 
-    } else if (msg.content === 'dizbot btc') {
+    } else if (msg.content.startsWith('dizbot crypto')) {
+        let msgSplit = msg.content.split(' ')
+        let asset = msgSplit[2].toUpperCase()
         let options = {
             "method": "GET",
             "hostname": "rest.coinapi.io",
-            "path": "/v1/exchangerate/BTC/USD",
+            "path": `/v1/exchangerate/${asset}/USD`,
             "headers": {'X-CoinAPI-Key': process.env.CRYPTO_KEY}
         };
-        var request = https.request(options, res => {
-            let data = ''
-            res.on('data', (chunk) => {
-                data = data + chunk.toString()
+        try {
+            var request = https.request(options, res => {
+                let data = ''
+                res.on('data', (chunk) => {
+                    data = data + chunk.toString()
+                })
+                res.on('end', () => {
+                    const body = JSON.parse(data)
+                    if (body.asset_id_base != undefined) {
+                        msg.reply(`${body.asset_id_base} is currently trading at ${Math.round(body.rate*100)/100} ${body.asset_id_quote}`)
+                    } else {
+                        msg.reply('did not recognize that symbol')
+                    }
+                })
             })
-            res.on('end', () => {
-                const body = JSON.parse(data)
-                msg.reply(`${body.asset_id_base} is currently trading at ${Math.round(body.rate*100)/100} ${body.asset_id_quote}`)
-            })
-        })
-        request.end()
+            request.end()
+        } catch(e) {
+            console.log(e)
+            msg.reply('that command did not work. sorry')
+        }
         
     
     } else if (msg.content.startsWith('dizbot music')) {
@@ -141,9 +144,15 @@ client.on('message', async msg => {
 
     } else if (msg.content === 'dizbot queue') {
         music.music(msg, connections)
+
+    } else if (msg.content === 'dizbot stop') {
+        music.music(msg, connections)
+    
+    } else if (msg.content === 'dizbot skip') {
+        music.music(msg, connections)
     
     } else {
-        msg.reply(`Unknown command ${msg.content}. If you type it again, I'll kill you. Type !help to see safer options.`)
+        msg.reply(`unknown command. nice one dude`)
     }
 })
 

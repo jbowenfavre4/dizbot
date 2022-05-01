@@ -1,5 +1,5 @@
 // music commands
-const { DiscordAPIError } = require('discord.js')
+
 const { AudioManager } = require('discordaudio')
 const discord = require('discord.js')
 
@@ -27,16 +27,36 @@ module.exports = {
                         }
                     })
                 } else if (msgSplit[1] == 'queue') {
-                    const queue = audioManager.queue(vc).reduce((text, song, index) => {
-                        if(song.title) text += `**[${index + 1}]** ${song.title}\n`
-                        else text += `**[${index + 1}]** ${song.url}\n`
-                        return text 
-                    }, `__**QUEUE**__\n`)
-                    const queueEmbed = new discord.MessageEmbed()
-                    .setColor(`BLURPLE`)
-                    .setTitle(`Queue`)
-                    .setDescription(queue);
-                    msg.reply({embeds: [queueEmbed]})
+                    try {
+                        const queue = audioManager.queue(vc).reduce((text, song, index) => {
+                            if(song.title) text += `**[${index + 1}]** ${song.title}\n`
+                            else text += `**[${index + 1}]** ${song.url}\n`
+                            return text 
+                        }, `__**QUEUE**__\n`)
+                        const queueEmbed = new discord.MessageEmbed()
+                        .setColor(`BLURPLE`)
+                        .setTitle(`Queue`)
+                        .setDescription(queue);
+                        msg.reply({embeds: [queueEmbed]})
+                    } catch(e) {
+                        console.log(e)
+                        msg.reply('there is no queue')
+                    }
+                } else if (msgSplit[1] == 'stop') {
+                    try {
+                        audioManager.stop(vc)
+                        msg.reply('music stopped and queue clear')
+                    } catch(e) {
+                        console.log(e)
+                        msg.reply('nothing is playing')
+                    }
+                } else if (msgSplit[1] == 'skip') {
+                    try {
+                        audioManager.skip(vc).then(() => msg.reply('skipped the song'))
+                    } catch(e) {
+                        console.log(e)
+                        msg.reply('something is wrong with this command')
+                    }
                 }
     
             } catch(e) {
