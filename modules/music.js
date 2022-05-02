@@ -4,7 +4,7 @@ const { AudioManager } = require('discordaudio')
 const discord = require('discord.js')
 
 module.exports = {
-    music: function(msg, connections) {
+    handleCommand: function(msg, connections) {
         const audioManager = new AudioManager()
             try {
                 let msgSplit = msg.content.split(' ')

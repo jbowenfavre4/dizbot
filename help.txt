@@ -1,10 +1,9 @@
-"dizbot hello": say hello
-
-"dizbot music <link>": plays music from youtube
+"dizbot music <link>": plays music from youtube or adds to queue if already playing
     "dizbot stop": stops music and clears the queue
     "dizbot queue": displays the current music queue
     "dizbot skip": skips to next song in the queue
 
-"dizbot btc": tells current price of bitcoin
+"dizbot crypto <ticker>": tells current price of bitcoin
+    example: "dizbot crypto btc"
 
 "dizbot valorant leaderboard": shows current top 10 on valorant ranked leaderboard
