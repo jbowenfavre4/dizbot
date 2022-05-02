@@ -5,9 +5,10 @@ const crypto = require('./modules/crypto')
 const valorant = require('./modules/val')
 require('dotenv').config();
 const fs = require('fs')
-const https = require('https')
 const discord = require('discord.js')
 const { exit } = require('process');
+const db = require('./util/db');
+const words = require('./modules/words');
 const client = new discord.Client(
     { intents: [discord.Intents.FLAGS.GUILDS, discord.Intents.FLAGS.GUILD_MESSAGES, discord.Intents.FLAGS.GUILD_VOICE_STATES] }
 )
@@ -19,6 +20,8 @@ client.on('ready', function(e) {
 client.login(process.env.BOT_TOKEN)
 
 client.on('message', async msg => {
+    
+    db.logMessage(msg)
     
     let connections = new Map()
     if (msg.author.bot) return
@@ -63,6 +66,9 @@ client.on('message', async msg => {
     } else if (msg.content === 'dizbot skip') {
         music.handleCommand(msg, connections)
     
+    } else if (msg.content === 'dizbot swears') {
+        words.swears(msg)
+
     } else {
         msg.reply(`unknown command. nice one dude`)
     }
