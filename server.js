@@ -69,6 +69,12 @@ client.on('message', async msg => {
     } else if (msg.content === 'dizbot swears') {
         words.swears(msg)
 
+    } else if (msg.content === 'dizbot swears favorite') {
+        words.favoriteSwear(msg)
+
+    } else if (msg.content === 'dizbot words favorite') {
+        words.favoriteWord(msg)
+
     } else {
         msg.reply(`unknown command. nice one dude`)
     }

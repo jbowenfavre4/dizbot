@@ -3,7 +3,14 @@
     "dizbot queue": displays the current music queue
     "dizbot skip": skips to next song in the queue
 
-"dizbot crypto <ticker>": tells current price of bitcoin
+"dizbot crypto <ticker>": tells current price of a cryptocurrency
     example: "dizbot crypto btc"
 
 "dizbot valorant leaderboard": shows current top 10 on valorant ranked leaderboard
+
+"dizbot swears": checks how many swear words you have said
+
+"dizbot swears favorite": checks your favorite swear word
+
+"dizbot words favorite": checks your favorite word
+

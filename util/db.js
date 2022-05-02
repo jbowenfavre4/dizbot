@@ -2,7 +2,7 @@
 
 const db = require('quick.db')
 
-const swear_words = ['shit', 'damn', 'fuck', 'bastard', 'bitch', 'cunt']
+const swear_words = ['shit', 'damn', 'fuck', 'bastard', 'bitch', 'cunt', 'motherfucker', 'fucker', 'fucked', 'bitches', 'fuk']
 
 module.exports = {
 
@@ -23,13 +23,14 @@ module.exports = {
         // record each word and add to user db object
         let msgSplit = msg.content.split(' ')
         for (let word of msgSplit) {
-            db.push(`users.${msg.author.id}.words`, word)
+            db.push(`users.${msg.author.id}.words.allWords`, word)
             if (swear_words.includes(word)) {
+                db.add(`users.${msg.author.id}.words.swearWords.${word}`, 1)
                 swears++
             }
         }
 
-        db.add(`users.${msg.author.id}.swears`, swears)
+        db.add(`users.${msg.author.id}.words.swears`, swears)
         
 
 
