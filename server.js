@@ -8,6 +8,7 @@ const fs = require('fs')
 const discord = require('discord.js')
 const { exit } = require('process');
 const db = require('./util/db');
+const util = require('./util/util')
 const words = require('./modules/words');
 const rw = require('random-words')
 const client = new discord.Client(
@@ -17,11 +18,13 @@ const client = new discord.Client(
 client.on('ready', function(e) {
     console.log(`Logged in as ${client.user.tag}`)
     
-    console.log(randomWord)
 })
 
 client.login(process.env.BOT_TOKEN)
-var randomWord = rw()
+var goodWord = rw()
+console.log(goodWord)
+var badWord = rw()
+console.log(badWord)
 
 client.on('message', async msg => {
     db.logMessage(msg)
@@ -30,11 +33,23 @@ client.on('message', async msg => {
     
     if (msg.author.bot) return
 
-    if (msg.content.includes(randomWord)) {
-        msg.reply(`congrats, you said the word. it was ${randomWord}. new word has been selected and you have been given 500 points`)
-        randomWord = rw()
-        console.log(randomWord)
+    if (msg.content.includes(goodWord)) {
+        let oldWord = goodWord
+        db.addCoins(msg.author.id, 500)
+        goodWord = rw()
+        console.log('new good word: ', goodWord)
+        msg.reply(`congrats, you said the word. it was ${oldWord}. ${util.getRandomGoodMessage()} you now have ${db.getBalance(msg.author.id)}`)
     }
+
+    if (msg.content.includes(badWord)) {
+        let oldWord = badWord
+        db.removeCoins(msg.author.id, 250)
+        badWord = rw()
+        console.log('new bad word: ', badWord)
+        msg.reply(`you said the bad word. it was ${oldWord}. ${util.getRandomBadMessage()} your new balance is ${db.getBalance(msg.author.id)}`)
+    }
+
+
     
     if (!msg.content.startsWith('dizbot')) return
 
@@ -86,6 +101,9 @@ client.on('message', async msg => {
 
     } else if (msg.content === 'dizbot words favorite') {
         words.favoriteWord(msg)
+
+    } else if (msg.content === 'dizbot balance') {
+        msg.reply(`your current balance is ${db.getBalance(msg.author.id)}`)
 
     } else {
         msg.reply(`unknown command. nice one dude`)

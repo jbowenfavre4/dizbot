@@ -14,3 +14,5 @@
 
 "dizbot words favorite": checks your favorite word
 
+"dizbot balance": checks your current coin balance for your character
+

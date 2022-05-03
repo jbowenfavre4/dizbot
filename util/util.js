@@ -1,5 +1,7 @@
 // functions that may be used across multiple modules
 
+const msgs = require('../rpg/messages.json')
+
 module.exports = {
     // returns item that occurs most frequently in an array
     modeArr: function(arr) {
@@ -36,5 +38,19 @@ module.exports = {
         }
         return {'word': keys[highestIndex], 'count': highest}
 
+    },
+
+    getRandomGoodMessage: function() {
+        return msgs.goodWordMessages[this.getRandomInt(msgs.goodWordMessages.length)]
+    },
+
+    getRandomBadMessage: function() {
+        return msgs.badWordMessages[this.getRandomInt(msgs.badWordMessages.length)]
+    },
+
+    getRandomInt: function(max) {
+        return Math.floor(Math.random() * max)
     }
+
+
 }

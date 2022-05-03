@@ -1,0 +1,20 @@
+{
+    "goodWordMessages": [
+        "you 500 coins in a dark cave.",
+        "you were rewarded 500 coins for a good deed.",
+        "you saved an elderly woman from a band of attackers. you were rewarded 500 coins.",
+        "you found and returned the King's lost horse. you were rewarded 500 coins.",
+        "you fought valiantly in the King's army. you were rewarded 500 coins.",
+        "you stopped a blind man from walking into danger. you were rewarded 500 coins.",
+        "you helped an elderly mage find his lost kitten. you were rewarded 500 coins."
+    ],
+    "badWordMessages": [
+        "you were attacked by thieves and lost 250 coins.",
+        "you were caught stealing from the local market. you were fined 250 coins.",
+        "you were deceived by a sorceress and lost 250 coins.",
+        "you fell asleep in a whore house and were robbed 250 coins.",
+        "a band of dwarves ganged up on you and stole 250 coins from your purse.",
+        "you stumbled upon a dragon's cave and dropped 250 coins as you tried to escape.",
+        "the King caught you staring at the Queen. you were fined 250 coins."
+    ]
+}

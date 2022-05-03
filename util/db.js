@@ -2,12 +2,11 @@
 
 const db = require('quick.db')
 
-const swear_words = ['shit', 'damn', 'fuck', 'bastard', 'bitch', 'cunt', 'motherfucker', 'fucker', 'fucked', 'bitches', 'fuk']
+const swear_words = ['shit', 'damn', 'fuck', 'bastard', 'bitch', 'cunt', 'motherfucker', 'fucker', 'fucked', 'bitches', 'fuk', 'ass', 'asscheek', 'asshole']
 
 module.exports = {
 
     start: function () {
-        console.log(db.get('name'))
     },
 
     logMessage: function(msg) {
@@ -18,6 +17,14 @@ module.exports = {
             db.set(`users.${msg.author.id}`, {
                 'name': msg.author.username
             })
+        }
+
+        if (db.get(`users.${msg.author.id}.character`) == null) {
+            db.set(`users.${msg.author.id}.character`, {})
+        }
+
+        if (db.get(`users.${msg.author.id}.balance`) == null ) {
+            db.set(`users.${msg.author.id}.balance`, 0)
         }
 
         // record each word and add to user db object
@@ -31,9 +38,33 @@ module.exports = {
         }
 
         db.add(`users.${msg.author.id}.words.swears`, swears)
-        
+    },
 
+    addCoins: function(userID, amount) {
+        try {
+            db.add(`users.${userID}.balance`, amount)
+        } catch(e) {
+            console.log(e)
+        }
+    },
 
+    removeCoins: function(userID, amount) {
+        try {
+            db.subtract(`users.${userID}.balance`, amount)
+            if (db.get(`users.${userID}.balance`) < 0) {
+                db.set(`users.${userID}.balance`, 0)
+            }
+        } catch(e) {
+            console.log(e)
+        }
+    },
+
+    getBalance: function(userID) {
+        try {
+            return db.get(`users.${userID}.balance`)
+        } catch(e) {
+            console.log(e)
+        }
     }
 
 }
