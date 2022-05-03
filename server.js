@@ -9,23 +9,35 @@ const discord = require('discord.js')
 const { exit } = require('process');
 const db = require('./util/db');
 const words = require('./modules/words');
+const rw = require('random-words')
 const client = new discord.Client(
     { intents: [discord.Intents.FLAGS.GUILDS, discord.Intents.FLAGS.GUILD_MESSAGES, discord.Intents.FLAGS.GUILD_VOICE_STATES] }
 )
 
 client.on('ready', function(e) {
     console.log(`Logged in as ${client.user.tag}`)
+    
+    console.log(randomWord)
 })
 
 client.login(process.env.BOT_TOKEN)
+var randomWord = rw()
 
 client.on('message', async msg => {
-    
     db.logMessage(msg)
     
     let connections = new Map()
+    
     if (msg.author.bot) return
+
+    if (msg.content.includes(randomWord)) {
+        msg.reply(`congrats, you said the word. it was ${randomWord}. new word has been selected and you have been given 500 points`)
+        randomWord = rw()
+        console.log(randomWord)
+    }
+    
     if (!msg.content.startsWith('dizbot')) return
+
     if (msg.content === 'dizbot hello') {
         msg.reply('hey')
     
