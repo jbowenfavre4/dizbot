@@ -1,6 +1,7 @@
 // functions that may be used across multiple modules
 
 const msgs = require('../rpg/messages.json')
+const db = require('../util/db')
 const inventory = require('../rpg/items.json')
 
 module.exports = {
@@ -55,5 +56,6 @@ module.exports = {
 
     getShopItems: function() {
         return inventory
+
     }
 }

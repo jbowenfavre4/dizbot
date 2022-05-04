@@ -10,7 +10,8 @@ const { exit } = require('process');
 const db = require('./util/db');
 const util = require('./util/util')
 const words = require('./modules/words');
-const rw = require('random-words')
+const rw = require('random-words');
+const shop = require('./modules/shop');
 const client = new discord.Client(
     { intents: [discord.Intents.FLAGS.GUILDS, discord.Intents.FLAGS.GUILD_MESSAGES, discord.Intents.FLAGS.GUILD_VOICE_STATES] }
 )
@@ -102,6 +103,9 @@ client.on('message', async msg => {
 
     } else if (msg.content === 'dizbot balance') {
         msg.reply(`your current balance is ${db.getBalance(msg.author.id)}`)
+
+    } else if (msg.content.startsWith('dizbot shop')) {
+        shop.displayShop(msg)
 
     } else {
         msg.reply(`unknown command. nice one dude`)

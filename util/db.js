@@ -2,6 +2,7 @@
 
 const db = require('quick.db')
 const util = require('./util')
+const inventory = require('../rpg/items.json')
 
 const swear_words = ['shit', 'damn', 'fuck', 'bastard', 'bitch', 'cunt', 'motherfucker', 'fucker', 'fucked', 'bitches', 'fuk', 'ass', 'asscheek', 'asshole']
 
@@ -71,6 +72,56 @@ module.exports = {
         } catch(e) {
             console.log(e)
         }
+    },
+
+    getArmorItems: function() {
+        let text = ''
+        for (let key in inventory.armor) {
+            text += `\n${key.toUpperCase()}\n\n`
+            for (let item of inventory.armor[key]) {
+                text += `${item.name.toUpperCase()}: ${item.price} coins, ${item.armor} armor\n`
+                if (item.effects != null) {
+                    for (effect of item.effects) {
+                        text += `\t - ${effect}\n`
+                    }
+                }
+            }
+        }
+        return text
+    },
+
+    getWeaponItems: function() {
+        let text = ''
+        text += `\nWEAPONS\n\n`
+        for (let item of inventory.weapons) {
+            text += `${item.name.toUpperCase()}: ${item.price} coins, ${item.attack} attack\n`
+            if (item.effects != null) {
+                for (effect of item.effects) {
+                    text += `\t - ${effect}\n`
+                }
+            }
+        }
+        return text
+    },
+
+    getAmuletItems: function() {
+        let text = ''
+        text += `\nAMULETS\n\n`
+        for (let item of inventory.amulets) {
+            text += `${item.name.toUpperCase()}: ${item.price} coins`
+            for (effect of item.effects) {
+                text += `\n\t - ${effect}\n`
+            }
+        }
+        return text
+    },
+
+    getShopItems: function() {
+        let text = ''
+        text += this.getArmorItems()
+        text += this.getWeaponItems()
+        text += this.getAmuletItems()
+        return text
     }
 
 }
