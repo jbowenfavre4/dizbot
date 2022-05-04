@@ -23,7 +23,6 @@ module.exports = {
                 res = arr[i-1]
             }
         }
-        console.log(res)
         return {'word': res, 'count': max}
     },
 

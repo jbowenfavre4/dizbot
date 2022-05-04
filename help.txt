@@ -16,3 +16,6 @@
 
 "dizbot balance": checks your current coin balance for your character
 
+"dizbot shop": view items available in shop
+    "dizbot <armor/weapons/amulets>": view items in shop
+
