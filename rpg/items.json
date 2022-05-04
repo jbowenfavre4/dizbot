@@ -1,0 +1,82 @@
+{
+    "helmets": [
+        {
+            "name": "Leather Helmet",
+            "price": 50,
+            "armor": 5,
+            "effects": null
+        },
+        {
+            "name": "Steel Helment",
+            "price": 150,
+            "armor": 15,
+            "effects": null
+        },
+        {
+            "name": "Knight's Helmet",
+            "price": 500,
+            "armor": 50,
+            "effects": null
+        }
+    ],
+    "breastplates": [
+        {
+            "name": "Leather Tunic",
+            "price": 100,
+            "armor": 15,
+            "effects": null
+        },
+        {
+            "name": "Chainmail Haubergeon",
+            "price": 300,
+            "armor": 35,
+            "effects": null
+        },
+        {
+            "name": "Holy Breastplate",
+            "price": 1500,
+            "armor": 100,
+            "effects": ["Divine Protection: increases total armor by 50%"]
+        }
+    ],
+    "pants": [
+        {
+            "name": "Leather Pants",
+            "price": 80,
+            "armor": 12,
+            "effects": null
+        },
+        {
+            "name": "Chainmail Leggings",
+            "price": 200,
+            "armor": 25,
+            "effects": null
+        },
+        {
+            "name": "Knight's Greaves",
+            "price": 500,
+            "armor": 50,
+            "effects": null
+        }
+    ],
+    "boots": [
+        {
+            "name": "Leather Boots",
+            "price": 50,
+            "armor": 5,
+            "effects": null
+        },
+        {
+            "name": "Sturdy Boots",
+            "price": 100,
+            "armor": 10,
+            "effects": null
+        },
+        {
+            "name": "Enchanted Boots",
+            "price": 750,
+            "armor": 60,
+            "effects": ["Swiftness: increases overall attack power by 10"]
+        }
+    ]
+}

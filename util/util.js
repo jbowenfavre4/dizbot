@@ -1,6 +1,7 @@
 // functions that may be used across multiple modules
 
 const msgs = require('../rpg/messages.json')
+const inventory = require('../rpg/items.json')
 
 module.exports = {
     // returns item that occurs most frequently in an array
@@ -50,7 +51,9 @@ module.exports = {
 
     getRandomInt: function(max) {
         return Math.floor(Math.random() * max)
+    },
+
+    getShopItems: function() {
+        return inventory
     }
-
-
 }

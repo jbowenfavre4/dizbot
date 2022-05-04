@@ -38,7 +38,7 @@ client.on('message', async msg => {
         db.addCoins(msg.author.id, 500)
         goodWord = rw()
         console.log('new good word: ', goodWord)
-        msg.reply(`congrats, you said the word. it was ${oldWord}. ${util.getRandomGoodMessage()} you now have ${db.getBalance(msg.author.id)}`)
+        msg.reply(`congrats, you said the good word. it was ${oldWord}. ${util.getRandomGoodMessage()} you now have ${db.getBalance(msg.author.id)}`)
     }
 
     if (msg.content.includes(badWord)) {
@@ -49,8 +49,6 @@ client.on('message', async msg => {
         msg.reply(`you said the bad word. it was ${oldWord}. ${util.getRandomBadMessage()} your new balance is ${db.getBalance(msg.author.id)}`)
     }
 
-
-    
     if (!msg.content.startsWith('dizbot')) return
 
     if (msg.content === 'dizbot hello') {
