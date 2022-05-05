@@ -1,7 +1,7 @@
 // functions that may be used across multiple modules
 
 const msgs = require('../rpg/messages.json')
-const db = require('../util/db')
+const db = require('./db')
 const inventory = require('../rpg/items.json')
 
 module.exports = {
