@@ -1,17 +1,21 @@
 // dizbot
 
-const music = require('./modules/music')
-const crypto = require('./modules/crypto')
-const valorant = require('./modules/val')
+const music = require('./src/modules/music')
+const crypto = require('./src/modules/crypto')
+const valorant = require('./src/modules/val')
 require('dotenv').config();
 const fs = require('fs')
 const discord = require('discord.js')
 const { exit } = require('process');
-const db = require('./util/db');
-const util = require('./util/util')
-const words = require('./modules/words');
+//const db = require('./src/util/db');
+const db = require('./src/db')
+const util = require('./src/util/util')
+const words = require('./src/modules/words');
 const rw = require('random-words');
-const shop = require('./modules/shop');
+const shop = require('./src/modules/shop');
+const logger = require('./src/util/logger')
+const sqlConfig = require('./src/config/sqlconfig')
+const sql = require('mssql')
 const client = new discord.Client(
     { intents: [discord.Intents.FLAGS.GUILDS, discord.Intents.FLAGS.GUILD_MESSAGES, discord.Intents.FLAGS.GUILD_VOICE_STATES] }
 )
@@ -28,26 +32,31 @@ var badWord = rw()
 console.log(badWord)
 
 client.on('message', async msg => {
-    db.logMessage(msg)
+    //db.logMessage(msg)
+    await logger(msg)
     
     let connections = new Map()
     
     if (msg.author.bot) return
 
     if (msg.content.includes(goodWord)) {
+        let connection = await sql.connect(sqlConfig)
         let oldWord = goodWord
-        db.addCoins(msg.author.id, 500)
+        await db.updateUserBalance(msg.author.id, 500)
         goodWord = rw()
         console.log('new good word: ', goodWord)
-        msg.reply(`congrats, you said the good word. it was ${oldWord}. ${util.getRandomGoodMessage()} you now have ${db.getBalance(msg.author.id)}`)
+        msg.reply(`congrats, you said the good word. it was ${oldWord}. ${util.getRandomGoodMessage()} you now have ${await db.getBalance(msg.author.id)}`)
+        await connection.close()
     }
 
     if (msg.content.includes(badWord)) {
+        let connection = await sql.connect(sqlConfig)
         let oldWord = badWord
-        db.removeCoins(msg.author.id, 250)
+        await db.subtractBalance(msg.author.id, 250)
         badWord = rw()
         console.log('new bad word: ', badWord)
-        msg.reply(`you said the bad word. it was ${oldWord}. ${util.getRandomBadMessage()} your new balance is ${db.getBalance(msg.author.id)}`)
+        msg.reply(`you said the bad word. it was ${oldWord}. ${util.getRandomBadMessage()} your new balance is ${await db.getBalance(msg.author.id)}`)
+        await connection.close()
     }
 
     if (!msg.content.startsWith('dizbot')) return
@@ -102,7 +111,9 @@ client.on('message', async msg => {
         words.favoriteWord(msg)
 
     } else if (msg.content === 'dizbot balance') {
-        msg.reply(`your current balance is ${db.getBalance(msg.author.id)}`)
+        let connection = await sql.connect(sqlConfig)
+        msg.reply(`your current balance is ${await db.getBalance(msg.author.id)}`)
+        connection.close()
 
     } else if (msg.content.startsWith('dizbot shop')) {
         shop.displayShop(msg)

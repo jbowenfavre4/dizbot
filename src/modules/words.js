@@ -1,34 +1,57 @@
 // word commands
 const util = require('../util/util')
-const db = require('quick.db')
+
+const SWEAR_WORDS = ['shit', 'damn', 'fuck', 'bastard', 'bitch', 'cunt', 'motherfucker', 'fucker', 'fucked', 'bitches', 'fuk', 'ass', 'asscheek', 'asshole']
 
 module.exports = {
 
-    swears: function(msg) {
-        let authorID = msg.author.id
-        let numSwears = db.get(`users.${authorID}.words.swears`)
-        if (numSwears != null) {
-            msg.reply(`you have used a swear word ${numSwears} times`)
+    swears: async function(msg) {
+        let words = await this.getWords(msg.author.id)
+        let swears = 0
+        for (let word of words) {
+            if (SWEAR_WORDS.includes(word)) {
+                swears++
+            }
+        }
+        if (swears == 0) {
+            msg.reply('you have not used any swear words yet. (lame)')
         } else {
-            msg.reply('looks like you have not used any swear words in this server (lame)')
+            msg.reply(`you have said ${swears} swear words`)
         }
     },
 
-    favoriteSwear: function(msg) {
-        let authorID = msg.author.id
-        let swears = db.get(`users.${authorID}.words.swearWords`)
-        if (swears != undefined) {
-            let res = util.objHighestVal(db.get(`users.${authorID}.words.swearWords`))
-            msg.reply(`your favorite swear word is ${res.word}. you have said it ${res.count} times`)
-        } else {
-            msg.reply('you have not said any swear words')
+    favoriteSwear: async function(msg) {
+        let words = await this.getWords(msg.author.id)
+        let swears = []
+        for (let word of words) {
+            if (SWEAR_WORDS.includes(word)) {
+                swears.push(word)
+            }
         }
+        let res = util.modeArr(swears)
+        msg.reply(`your favorite swear word is ${res.word}. you've said it ${res.count} times`)
     },
 
-    favoriteWord: function(msg) {
-        let authorID = msg.author.id
-        let res = util.modeArr(db.get(`users.${authorID}.words.allWords`))
-        msg.reply(`your favorite word is ${res.word}. you have said it ${res.count} times`)
+    favoriteWord: async function(msg) {
+        let words = await this.getWords(msg.author.id)
+        let res = util.modeArr(words)
+        msg.reply(`your favorite word is ${res.word}. you've said it ${res.count} times`)
+    },
+
+    getWords: async function(userId) {
+        const sql = require('mssql')
+        const sqlConfig = require('../config/sqlconfig')
+        const db = require('../db')
+        let connection = await sql.connect(sqlConfig)
+        let words = []
+        let msgs = await db.getMessages(userId)
+        for (let item of msgs) {
+            for (let word of item.content.split(' ')) {
+                words.push(word)
+            }
+        }
+        await connection.close()
+        return words
     }
 
 }

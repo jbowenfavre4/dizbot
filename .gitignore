@@ -2,3 +2,5 @@
 /node_modules
 pupspike.js
 test.js
+server.js
+json.sqlite
