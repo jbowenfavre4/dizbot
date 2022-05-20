@@ -15,7 +15,8 @@ const rw = require('random-words');
 const shop = require('./src/modules/shop');
 const logger = require('./src/util/logger')
 const sqlConfig = require('./src/config/sqlconfig')
-const sql = require('mssql')
+const sql = require('mssql');
+const { MessageContext } = require('twilio/lib/rest/conversations/v1/conversation/message');
 const client = new discord.Client(
     { intents: [discord.Intents.FLAGS.GUILDS, discord.Intents.FLAGS.GUILD_MESSAGES, discord.Intents.FLAGS.GUILD_VOICE_STATES] }
 )
@@ -32,12 +33,12 @@ var badWord = rw()
 console.log(badWord)
 
 client.on('message', async msg => {
+    if (msg.author.bot) return
+    
     //db.logMessage(msg)
     await logger(msg)
     
     let connections = new Map()
-    
-    if (msg.author.bot) return
 
     if (msg.content.includes(goodWord)) {
         let connection = await sql.connect(sqlConfig)
@@ -50,13 +51,11 @@ client.on('message', async msg => {
     }
 
     if (msg.content.includes(badWord)) {
-        let connection = await sql.connect(sqlConfig)
         let oldWord = badWord
         await db.subtractBalance(msg.author.id, 250)
         badWord = rw()
         console.log('new bad word: ', badWord)
         msg.reply(`you said the bad word. it was ${oldWord}. ${util.getRandomBadMessage()} your new balance is ${await db.getBalance(msg.author.id)}`)
-        await connection.close()
     }
 
     if (!msg.content.startsWith('dizbot')) return
@@ -111,12 +110,16 @@ client.on('message', async msg => {
         words.favoriteWord(msg)
 
     } else if (msg.content === 'dizbot balance') {
-        let connection = await sql.connect(sqlConfig)
         msg.reply(`your current balance is ${await db.getBalance(msg.author.id)}`)
-        connection.close()
 
     } else if (msg.content.startsWith('dizbot shop')) {
         shop.displayShop(msg)
+
+    } else if (msg.content.startsWith('dizbot buy ')) {
+        shop.buyItem(msg)
+
+    } else if (msg.content === 'dizbot loadout') {
+        shop.getLoadout(msg)
 
     } else {
         msg.reply(`unknown command. nice one dude`)

@@ -19,3 +19,9 @@
 "dizbot shop": view items available in shop
     "dizbot <armor/weapons/amulets>": view items in shop
 
+"dizbot buy <category> <item name>": buys and equips item
+    note: buying an item will permanently remove any item already equipped
+
+"dizbot loadout": shows your current equipment
+    note: by default, everyone has 10 base armor and 5 base attack
+

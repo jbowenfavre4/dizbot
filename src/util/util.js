@@ -55,6 +55,5 @@ module.exports = {
 
     getShopItems: function() {
         return inventory
-
     }
 }

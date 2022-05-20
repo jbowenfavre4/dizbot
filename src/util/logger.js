@@ -1,19 +1,17 @@
 const db = require('../db')
 const util = require('./util')
-const sql = require('mssql')
-const sqlConfig = require('../config/sqlconfig')
 
 async function logMessage(msg) {
-    let connection = await sql.connect(sqlConfig)
 
     // log message in db
-    db.insertMsg(msg.id, msg.content, msg.author.id)
+    await db.insertMsg(msg.id, msg.content, msg.author.id)
     
     // get author of message
     let user = await db.getUser(msg.author.id)
 
     // add user to db if not already there
-    if (!user[0]) {
+    
+    if (user == undefined) {
         await db.insertUser(msg.author)
         user = await db.getUser(msg.author.id)
     }
@@ -21,7 +19,6 @@ async function logMessage(msg) {
     // update user balance
     await db.updateUserBalance(msg.author.id, util.getRandomInt(6))
     
-    await connection.close()
 
     // add user to db if not there already
     // if (db.get(`users.${msg.author.id}`) == null) {

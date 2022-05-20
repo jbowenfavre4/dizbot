@@ -93,7 +93,7 @@ module.exports = {
     getWeaponItems: function() {
         let text = ''
         text += `\nWEAPONS\n\n`
-        for (let item of inventory.weapons) {
+        for (let item of inventory.weapon) {
             text += `${item.name.toUpperCase()}: ${item.price} coins, ${item.attack} attack\n`
             if (item.effects != null) {
                 for (effect of item.effects) {
@@ -107,7 +107,7 @@ module.exports = {
     getAmuletItems: function() {
         let text = ''
         text += `\nAMULETS\n\n`
-        for (let item of inventory.amulets) {
+        for (let item of inventory.amulet) {
             text += `${item.name.toUpperCase()}: ${item.price} coins`
             for (effect of item.effects) {
                 text += `\n\t - ${effect}\n`
@@ -122,6 +122,8 @@ module.exports = {
         text += this.getWeaponItems()
         text += this.getAmuletItems()
         return text
-    }
+    },
+
+    
 
 }
