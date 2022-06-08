@@ -132,9 +132,9 @@ module.exports = {
     }
     await connection.close()
   },
-  
+
   // retrive id of armor piece for user, default to all pieces if category not specified
-  getUserArmorItems: async function(userId, category=null) {
+  getUserItems: async function(userId, category=null) {
     let connection = await sql.connect(sqlConfig)
     if (category == null) {
       let query_string = `select helmet, chestplate, pants, boots, weapon, amulet from dbo.${process.env.USERS_DB} where userId = ${userId}`
@@ -159,7 +159,7 @@ module.exports = {
           console.log(err)
         }
       } else {
-        return await this.getUserArmorItems(userId)
+        return await this.getUserItems(userId)
       }
     }    
     await connection.close()   

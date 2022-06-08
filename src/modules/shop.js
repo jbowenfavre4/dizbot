@@ -201,5 +201,33 @@ module.exports = {
           }
           return -1
         }
+      },
+
+      getUserArmorValue: async function(userId) {
+        var armorVal = 0
+        let items = await db.getUserItems(userId)
+        for (let piece in items) {
+          if (items[piece] != null) {
+            let curr = await this.getItem(piece, items[piece])
+            if (curr['armor'] != undefined) {
+              armorVal += curr['armor']
+            }
+          }
+        }
+        return armorVal + 10
+      },
+
+      getUserAttackValue: async function(userId) {
+        var attackVal = 0
+        let items = await db.getUserItems(userId)
+        for (let piece in items) {
+          if (items[piece] != null) {
+            let curr = await this.getItem(piece, items[piece])
+            if (curr['attack'] != undefined) {
+              attackVal += curr['attack']
+            }
+          }
+        }
+        return attackVal + 5
       }
 }
