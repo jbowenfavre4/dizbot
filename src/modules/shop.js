@@ -90,7 +90,7 @@ module.exports = {
         return `${item.name}, ${item.attack} attack`
     },
 
-    getLoadout: async function(msg) {
+    getLoadout: async function(userId) {
         let armor = 10
         let attack = 5
         let helmet = 'none'
@@ -99,7 +99,6 @@ module.exports = {
         let boots = 'none'
         let weapon = 'none'
         let amulet = 'none'
-        let userId = msg.author.id
         let userInfo = await db.getUser(userId)
         if (userInfo.helmet != null) {
             let obj = await this.getItem('helmet', userInfo.helmet)
@@ -139,10 +138,15 @@ module.exports = {
         
         Total Armor: ${armor}
         Total Attack: ${attack}`
-        const display = new discord.MessageEmbed()
+        return text
+    },
+
+    displayLoadout: async function(msg) {
+        let userInfo = await db.getUser(msg.author.id)
+        let display = new discord.MessageEmbed()
             .setColor(`BLUE`)
             .setTitle(`${userInfo.name}'s stuff`)
-            .setDescription(text)
+            .setDescription(await this.getLoadout(msg.author.id))
         msg.reply({embeds: [display]})
     },
 

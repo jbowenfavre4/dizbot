@@ -33,6 +33,7 @@
     "jquery": "^3.6.0",
     "lorem-ipsum": "^2.0.4",
     "math": "^0.0.3",
+    "moment": "^2.29.3",
     "mssql": "^8.1.0",
     "node-fetch": "^3.2.3",
     "node-gyp": "^9.0.0",

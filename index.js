@@ -3,6 +3,7 @@
 const music = require('./src/modules/music')
 const crypto = require('./src/modules/crypto')
 const valorant = require('./src/modules/val')
+const actions = require('./src/modules/actions')
 require('dotenv').config();
 const fs = require('fs')
 const discord = require('discord.js')
@@ -119,7 +120,10 @@ client.on('message', async msg => {
         shop.buyItem(msg)
 
     } else if (msg.content === 'dizbot loadout') {
-        shop.getLoadout(msg)
+        shop.displayLoadout(msg)
+
+    } else if (msg.content.startsWith('dizbot attack')) {
+        actions.attack(msg)
 
     } else {
         msg.reply(`unknown command. nice one dude`)

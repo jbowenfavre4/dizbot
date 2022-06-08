@@ -1,5 +1,5 @@
 // db
-
+const moment = require('moment')
 const inventory = require('./rpg/items.json')
 const sql = require('mssql')
 const dbconfig = require('./config/db.config')
@@ -36,9 +36,29 @@ module.exports = {
     let query_string = `select * from dbo.${process.env.USERS_DB} where userId = '${userId}'`
     try {
       const result = await sql.query(query_string)
-      connection.close()
+      await connection.close()
       return result.recordset[0]
 
+    } catch(err) {
+      console.log(err)
+    }
+    await connection.close()
+  },
+
+  getUserByName: async function(name) {
+    let connection = await sql.connect(sqlConfig)
+    let query_string = `select * from dbo.${process.env.USERS_DB} where name = '${name}'`
+    try {
+      const result = await sql.query(query_string)
+      await connection.close()
+      if (result.recordset.length == 0) {
+        return -1
+      } else if (result.recordset.length > 1) {
+        return -2
+      } else {
+        return result.recordset[0]
+      }
+      
     } catch(err) {
       console.log(err)
     }
@@ -214,5 +234,32 @@ getShopItems: function() {
     text += this.getAmuletItems()
     return text
 },
+
+  recordBattle: async function(winner, loser) {
+    let connection = await sql.connect(sqlConfig)
+      let query_string = `insert into dbo.${process.env.BATTLES_DB} values('${winner}', '${loser}', '${moment().format('MMMM Do YYYY, h:mm:ss a')}')`
+      try {
+        const result = await sql.query(query_string)
+        await connection.close()
+        return result.recordset
+      } catch(err) {
+        console.log(err)
+      }
+      await connection.close()
+  },
+
+  checkRecord: async function(winner, loser) {
+    let connection = await sql.connect(sqlConfig)
+    let query_string = `select COUNT(winner) from dbo.${process.env.BATTLES_DB} 
+      where winner = '${winner}' and loser = '${loser}'`
+    try {
+      const result = await sql.query(query_string)
+      await connection.close()
+      return result.recordset[0]['']
+    } catch(err) {
+      console.log(err)
+    }
+    await connection.close()
+  }
   
 }
