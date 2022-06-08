@@ -54,7 +54,8 @@ module.exports = {
             text += `\nThe defender parried the first attack and dealt a critical blow.`
             attackerHP = 0
         }
-        
+        var newAttackerHP = undefined
+        var newDefenderHP = undefined
         while (defenderHP > 0 && attackerHP > 0) {
 
             newDefenderHP = await this.simulateAttack(attackerAtt, defenderHP)
@@ -62,14 +63,18 @@ module.exports = {
             text += `\n${attackerName} deals ${defenderHP - newDefenderHP} damage, ${defenderName} has ${newDefenderHP} health remaining`
             if (newDefenderHP <= 0) {
                 defenderHP = newDefenderHP
-                attackerHP = newAttackerHP
+                if (newAttackerHP != undefined) {
+                    attackerHP = newAttackerHP
+                }
                 break
             }
             newAttackerHP = await this.simulateAttack(defenderAtt, attackerHP)
             text += `\n${defenderName} deals ${attackerHP - newAttackerHP} damage, ${attackerName} has ${newAttackerHP} health remaining`
             
             if (newAttackerHP <= 0) {
-                defenderHP = newDefenderHP
+                if (newDefenderHP != undefined) {
+                    defenderHP = newDefenderHP
+                }
                 attackerHP = newAttackerHP
                 break
             }
