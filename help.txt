@@ -25,3 +25,7 @@
 "dizbot loadout": shows your current equipment
     note: by default, everyone has 10 base armor and 5 base attack
 
+"dizbot attack <name>": attacks another person in the server
+    if the attacker wins they will steal 25 coins from the defender. the defender steals 50 coins if they defeat the attacker.
+    users can only be attacked once per hour.
+    having better armor and weapons increases your chances of winning battles.

@@ -67,7 +67,7 @@ module.exports = {
 
   insertUser: async function(user) {
     let connection = await sql.connect(sqlConfig)
-    let query_string = `insert into dbo.${process.env.USERS_DB} values('${user.id}', '${user.username}', 0, null, null, null, null, null, null)`
+    let query_string = `insert into dbo.${process.env.USERS_DB} values('${user.id}', '${user.username}', 0, null, null, null, null, null, null, null)`
     try {
       const result = await sql.query(query_string)
     } catch(err) {
@@ -256,6 +256,19 @@ getShopItems: function() {
       const result = await sql.query(query_string)
       await connection.close()
       return result.recordset[0]['']
+    } catch(err) {
+      console.log(err)
+    }
+    await connection.close()
+  },
+
+  updateLastAttacked: async function(userId) {
+    let connection = await sql.connect(sqlConfig)
+    let query_string = `update dbo.${process.env.USERS_DB} SET lastAttacked = '${moment().format('MMMM Do YYYY, h:mm:ss a')}' WHERE userId = '${userId}'`
+
+    try {
+      const result = await sql.query(query_string)
+      await connection.close()
     } catch(err) {
       console.log(err)
     }

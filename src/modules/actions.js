@@ -1,13 +1,14 @@
 const db = require('../db')
 const shop = require('../modules/shop')
 const util = require('../util/util')
+const moment = require('moment')
 module.exports = {
 
     attack: async function(msg) {
 
         let text = ''
         const attackerName = msg.author.username 
-        
+        const currTime = moment().format('MMMM Do YYYY, h:mm:ss a')
         let msgSplit = msg.content.split(' ')
         let defenderName = ''
         for (let word of msgSplit.slice(2)) {
@@ -17,22 +18,38 @@ module.exports = {
             msg.reply('you need to tell me who you want to attack')
             return
         } 
+
+        // can't attack dizbot
         else if (defenderName == 'dizbot') {
             msg.reply('nice try.')
             return
         }
         let defender = await db.getUserByName(defenderName)
+
+        // defender is not yet in the db
         if (defender == -1) {
             msg.reply(`user ${defenderName} not found`)
             return
+
+        // db returns multiple users with that name in the server
         } else if (defender == -2) {
             msg.reply(`congratulations. you have found a glitch in the matrix. there are multiple users with the name ${defenderName} and idk how to handle it yet.`)
             return
+
+        // verify that the user is not trying to attack themself
         } else if (defender['userId'] == msg.author.id) {
             msg.reply('you cannot attack yourself, smartass')
             return
+        
+        // verify that the user has not been attacked this hour
+        } else if (defender['lastAttacked'].split(' ')[3].split(':')[0] == currTime.split(' ')[3].split(':')[0]) {
+            let la = defender['lastAttacked'].split(' ').slice(0,3)
+            let ca = currTime.split(' ').slice(0,3)
+            if (la[0] == ca[0] && la[1] == ca[1] && ca[2] == la[2]) {
+                msg.reply('you need to give that person a rest before you attack them again')
+                return
+            }
         }
-
         var attackerAtt = await shop.getUserAttackValue(msg.author.id)
         var attackerHP = await shop.getUserArmorValue(msg.author.id)
         var defenderAtt = await shop.getUserAttackValue(defender['userId'])
@@ -103,6 +120,7 @@ module.exports = {
         }
         
         await db.recordBattle(winner, loser)
+        await db.updateLastAttacked(defender.userId)
 
         text += `\n\nall time record:\n ${winnerName} ${await db.checkRecord(winner, loser)} - ${await db.checkRecord(loser, winner)} ${loserName}`
         msg.reply(text)
