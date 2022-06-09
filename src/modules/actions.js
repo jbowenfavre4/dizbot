@@ -42,12 +42,14 @@ module.exports = {
             return
         
         // verify that the user has not been attacked this hour
-        } else if (defender['lastAttacked'].split(' ')[3].split(':')[0] == currTime.split(' ')[3].split(':')[0]) {
-            let la = defender['lastAttacked'].split(' ').slice(0,3)
-            let ca = currTime.split(' ').slice(0,3)
-            if (la[0] == ca[0] && la[1] == ca[1] && ca[2] == la[2]) {
-                msg.reply('you need to give that person a rest before you attack them again')
-                return
+        } else if (defender['lastAttacked'] != null) {
+            if (defender['lastAttacked'].split(' ')[3].split(':')[0] == currTime.split(' ')[3].split(':')[0]) {
+                let la = defender['lastAttacked'].split(' ').slice(0,3)
+                let ca = currTime.split(' ').slice(0,3)
+                if (la[0] == ca[0] && la[1] == ca[1] && ca[2] == la[2]) {
+                    msg.reply('you need to give that person a rest before you attack them again')
+                    return
+                }
             }
         }
         var attackerAtt = await shop.getUserAttackValue(msg.author.id)
