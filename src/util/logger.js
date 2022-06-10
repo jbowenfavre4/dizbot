@@ -10,10 +10,15 @@ async function logMessage(msg) {
     let user = await db.getUser(msg.author.id)
 
     // add user to db if not already there
-    
     if (user == undefined) {
         await db.insertUser(msg.author)
         user = await db.getUser(msg.author.id)
+    
+    } else {
+    // user already exists in database, check name to see if update is needed
+        if (user.name != msg.author.username) {
+            await db.updateUserName(msg.author.id, msg.author.username)
+        }
     }
 
     // update user balance

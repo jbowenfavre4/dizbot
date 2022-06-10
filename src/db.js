@@ -45,6 +45,18 @@ module.exports = {
     await connection.close()
   },
 
+  updateUserName: async function(userId, name) {
+    let connection = await sql.connect(sqlConfig)
+    let query_string = `update dbo.${process.env.USERS_DB} SET name = '${name}' WHERE userId = ${userId}`
+    try {
+      const result = await sql.query(query_string)
+      await connection.close()
+    } catch(err) {
+      console.log(err)
+    }
+    await connection.close()
+  },
+
   getUserByName: async function(name) {
     let connection = await sql.connect(sqlConfig)
     let query_string = `select * from dbo.${process.env.USERS_DB} where name = '${name}'`
