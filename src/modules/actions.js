@@ -17,10 +17,12 @@ module.exports = {
         if (defenderName == '') {
             msg.reply('you need to tell me who you want to attack')
             return
-        } 
+        } else if (await db.getBalance(msg.author.id) < 50) {
+            msg.reply('you need at least 50 coins to attack someone')
+            return
 
         // can't attack dizbot
-        else if (defenderName == 'dizbot') {
+        } else if (defenderName == 'dizbot') {
             msg.reply('nice try.')
             return
         }
@@ -29,6 +31,10 @@ module.exports = {
         // defender is not yet in the db
         if (defender == -1) {
             msg.reply(`user ${defenderName} not found`)
+            return
+
+        } else if (await db.getBalance(defender['userId']) < 25) {
+            msg.reply('pick on someone who has at least 25 coins.')
             return
 
         // db returns multiple users with that name in the server
