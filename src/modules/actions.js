@@ -75,11 +75,14 @@ module.exports = {
         }
         var newAttackerHP = undefined
         var newDefenderHP = undefined
+        var attackerBlows = 0
+        var defenderBlows = 0
         while (defenderHP > 0 && attackerHP > 0) {
 
             newDefenderHP = await this.simulateAttack(attackerAtt, defenderHP)
 
-            text += `\n${attackerName} deals ${defenderHP - newDefenderHP} damage, ${defenderName} has ${newDefenderHP} health remaining`
+            //text += `\n${attackerName} deals ${defenderHP - newDefenderHP} damage, ${defenderName} has ${newDefenderHP} health remaining`
+            attackerBlows++
             if (newDefenderHP <= 0) {
                 defenderHP = newDefenderHP
                 if (newAttackerHP != undefined) {
@@ -88,7 +91,8 @@ module.exports = {
                 break
             }
             newAttackerHP = await this.simulateAttack(defenderAtt, attackerHP)
-            text += `\n${defenderName} deals ${attackerHP - newAttackerHP} damage, ${attackerName} has ${newAttackerHP} health remaining`
+            //text += `\n${defenderName} deals ${attackerHP - newAttackerHP} damage, ${attackerName} has ${newAttackerHP} health remaining`
+            defenderBlows++
             
             if (newAttackerHP <= 0) {
                 if (newDefenderHP != undefined) {
@@ -104,7 +108,7 @@ module.exports = {
 
 
         if (defenderHP == 0) {
-            text += `**\n\n${defenderName} has been slain. ${attackerName} wins!** ${attackerName} stole 25 coins from ${defenderName}.`
+            text += `**\n\n${defenderName} has been slain. ${attackerName} slew them in ${attackerBlows} blows and had ${attackerHP} HP remaining. ${attackerName} wins!** ${attackerName} stole 25 coins from ${defenderName}.`
             await db.subtractBalance(defender.userId, 25)
             await db.updateUserBalance(msg.author.id, 25)
             var winner = msg.author.id
@@ -112,7 +116,7 @@ module.exports = {
             var loserName = defenderName
             var loser = defender.userId
         } else if (attackerHP == 0) {
-            text += `**\n\n${attackerName} has been slain. ${defenderName} wins!** ${defenderName} stole 50 coins from ${attackerName}.`
+            text += `**\n\n${attackerName} has been slain. ${defenderName} slew them in ${defenderBlows} blows and had ${defenderHP} HP remaining. ${defenderName} wins!** ${defenderName} stole 50 coins from ${attackerName}.`
             await db.subtractBalance(msg.author.id, 50)
             await db.updateUserBalance(defender.userId, 50)
             var winnerName = defenderName
