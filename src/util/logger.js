@@ -22,7 +22,9 @@ async function logMessage(msg) {
     }
 
     // update user balance
-    await db.updateUserBalance(msg.author.id, util.getRandomInt(6))
+    let randomInt = util.getRandomInt(6)
+    console.log(randomInt)
+    await db.updateUserBalance(msg.author.id, randomInt)
     
 
     // add user to db if not there already

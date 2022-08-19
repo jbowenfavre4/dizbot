@@ -4,6 +4,7 @@ const music = require('./src/modules/music')
 const crypto = require('./src/modules/crypto')
 const valorant = require('./src/modules/val')
 const actions = require('./src/modules/actions')
+const events = require('./src/modules/events')
 require('dotenv').config();
 const fs = require('fs')
 const discord = require('discord.js')
@@ -18,6 +19,7 @@ const logger = require('./src/util/logger')
 const sqlConfig = require('./src/config/sqlconfig')
 const sql = require('mssql');
 const { MessageContext } = require('twilio/lib/rest/conversations/v1/conversation/message');
+const { EVENTS } = require('discordaudio/src/util/constants')
 const client = new discord.Client(
     { intents: [discord.Intents.FLAGS.GUILDS, discord.Intents.FLAGS.GUILD_MESSAGES, discord.Intents.FLAGS.GUILD_VOICE_STATES] }
 )
@@ -124,6 +126,15 @@ client.on('message', async msg => {
 
     } else if (msg.content.startsWith('dizbot attack')) {
         actions.attack(msg)
+
+    // } else if (msg.content.startsWith('dizbot add event')) {
+    //     events.addEvent(msg)
+    
+    // } else if (msg.content == 'dizbot events') {
+    //     events.getEvents(msg)
+
+    // } else if (msg.content.startsWith('dizbot delete event')) {
+    //     events.deleteEvent(msg)
 
     } else {
         msg.reply(`unknown command. nice one dude`)

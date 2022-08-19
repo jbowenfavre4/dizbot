@@ -21,6 +21,7 @@ const sqlConfig = {
 
 module.exports = {
   insertMsg: async function(id, content, userId) {
+    content = content.replaceAll("'", "''")
     let connection = await sql.connect(sqlConfig)
     let query_string = `insert into dbo.${process.env.MSGS_DB} values('${id}', '${content}', '${userId}')` 
     try {
@@ -280,6 +281,57 @@ getShopItems: function() {
 
     try {
       const result = await sql.query(query_string)
+      await connection.close()
+    } catch(err) {
+      console.log(err)
+    }
+    await connection.close()
+  },
+
+  addEvent: async function(event_name, location, date, time) {
+    let connection = await sql.connect(sqlConfig)
+    try {
+      const result = await sql.query(`INSERT INTO dbo.${process.env.EVENTS_DB} VALUES ('${event_name}', '${location}', CONVERT(date, '${date}'), CONVERT(time, '${time}'))`)
+      await connection.close()
+      return 1
+    } catch(err) {
+      console.log(`something is wrong with this input: ${event_name} ${location} ${date} ${time}`)
+      return -1
+    }
+    await connection.close()
+  },
+
+  getEventNames: async function() {
+    let connection = await sql.connect(sqlConfig)
+    try {
+      const result = await sql.query(`SELECT event_name FROM dbo.${process.env.EVENTS_DB}`)
+      await connection.close()
+      return result.recordset
+    } catch(err) {
+      console.log(err)
+    }
+  },
+
+  getUpcomingEvents: async function() {
+    let today = moment().add(10, 'days').calendar()
+    let connection = await sql.connect(sqlConfig)
+    try {
+      const result = await sql.query(`SELECT * FROM dbo.${process.env.EVENTS_DB} 
+      WHERE CONVERT(date, '${today}') < date`)
+      await connection.close()
+      return result.recordset
+    } catch(err) {
+      console.log(err)
+    }
+  },
+
+  deleteEvent: async function(name) {
+    let connection = await sql.connect(sqlConfig)
+    try {
+      const result = await sql.query(`DELETE FROM dbo.${process.env.EVENTS_DB} WHERE event_name = '${name}'`)
+      if (result.rowsAffected == 0) {
+        return -1
+      } else return 0
       await connection.close()
     } catch(err) {
       console.log(err)
