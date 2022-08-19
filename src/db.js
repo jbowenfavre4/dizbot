@@ -93,7 +93,8 @@ module.exports = {
   updateUserBalance: async function(userId, amount) {
     let connection = await sql.connect(sqlConfig)
     let curBalance = await this.getBalance(userId, connection)
-    let query_string = `update dbo.${process.env.USERS_DB} SET balance = ${curBalance + amount} WHERE userId = ${userId}`
+    let query_string = `update dbo.${process.env.USERS_DB} SET balance = ${curBalance + amount} WHERE userId = '${userId}'`
+    console.log(query_string)
     try {
       await sql.query(query_string)
     } catch(err) {
@@ -106,14 +107,17 @@ module.exports = {
     if (connection == null) {
       newConnection = await sql.connect(sqlConfig)
     }
-    let query_string = `select balance from dbo.${process.env.USERS_DB} where userId = ${userId}`
+    let query_string = `select balance from dbo.${process.env.USERS_DB} where userId = '${userId}'`
     try {
       const result = await sql.query(query_string)
+
       if (connection == null) {
         await newConnection.close()
       }
+      console.log(result.recordset[0].balance)
       return result.recordset[0].balance
     } catch(err) {
+      console.log('CAUGHT HERE')
       console.log(err)
     }
     if (connection == null) {
