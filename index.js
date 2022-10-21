@@ -20,6 +20,7 @@ const sqlConfig = require('./src/config/sqlconfig')
 const sql = require('mssql');
 const { MessageContext } = require('twilio/lib/rest/conversations/v1/conversation/message');
 const { EVENTS } = require('discordaudio/src/util/constants')
+const quotes = require('./src/modules/quotes')
 const client = new discord.Client(
     { intents: [discord.Intents.FLAGS.GUILDS, discord.Intents.FLAGS.GUILD_MESSAGES, discord.Intents.FLAGS.GUILD_VOICE_STATES] }
 )
@@ -126,6 +127,9 @@ client.on('message', async msg => {
 
     } else if (msg.content.startsWith('dizbot attack')) {
         actions.attack(msg)
+
+    } else if (msg.content.startsWith('dizbot quote')) {
+        quotes.respond(msg)
 
     // } else if (msg.content.startsWith('dizbot add event')) {
     //     events.addEvent(msg)

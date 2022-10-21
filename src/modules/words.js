@@ -45,6 +45,7 @@ module.exports = {
         let connection = await sql.connect(sqlConfig)
         let words = []
         let msgs = await db.getMessages(userId)
+        console.log(msgs)
         for (let item of msgs) {
             for (let word of item.content.split(' ')) {
                 words.push(word)
