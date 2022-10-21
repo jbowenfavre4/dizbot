@@ -42,7 +42,6 @@ module.exports = {
         const sql = require('mssql')
         const sqlConfig = require('../config/sqlconfig')
         const db = require('../db')
-        let connection = await sql.connect(sqlConfig)
         let words = []
         let msgs = await db.getMessages(userId)
         console.log(msgs)
@@ -51,7 +50,6 @@ module.exports = {
                 words.push(word)
             }
         }
-        await connection.close()
         return words
     }
 
